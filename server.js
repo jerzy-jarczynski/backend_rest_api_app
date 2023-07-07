@@ -47,6 +47,11 @@ app.get('/testimonials/:id', (req, res) => {
 // post add new element to db array
 app.post('/testimonials', (req, res) => {
   const { author, text } = req.body;
+
+  if (!author || !text) {
+    return res.status(400).json({ error: 'Author and text are required fields' });
+  }
+
   const id = uuidv4();
   const newTestimonial = { id, author, text };
   db.push(newTestimonial);
@@ -57,6 +62,10 @@ app.post('/testimonials', (req, res) => {
 app.put('/testimonials/:id', (req, res) => {
   const { id } = req.params;
   const { author, text } = req.body;
+
+  if (!author || !text) {
+    return res.status(400).json({ error: 'Author and text are required fields' });
+  }
 
   const testimonial = db.find((item) => item.id === id);
 
