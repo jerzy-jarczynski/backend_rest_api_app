@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./../db');
+const { v4: uuidv4 } = require('uuid');
 
 // get all db.testimonials array
 router.route('/testimonials').get((req, res) => {
@@ -16,12 +17,13 @@ router.route('/testimonials/random').get((req, res) => {
 
 // get single db.testimonials array element
 router.route('/testimonials/:id').get((req, res) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
   const testimonial = db.testimonials.find((item) => item.id === id);
   if (testimonial) {
     res.json(testimonial);
   } else {
-    res.status(404).json({ error: 'Testimonial not found' });
+    if (id !== 'random')
+      res.status(404).json({ error: 'Testimonial not found' });
   }
 });
 
