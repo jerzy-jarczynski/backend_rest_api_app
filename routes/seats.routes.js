@@ -27,7 +27,6 @@ router.route('/seats/:id').get((req, res) => {
   }
 });
 
-// post add new element to db.seats array
 router.route('/seats').post((req, res) => {
   const { day, seat, client, email } = req.body;
 
@@ -35,8 +34,20 @@ router.route('/seats').post((req, res) => {
     return res.status(400).json({ error: 'One or more mandatory fields omitted.' });
   }
 
+  const parsedDay = parseInt(day);
+  const parsedSeat = parseInt(seat);
+
+  if (isNaN(parsedDay) || isNaN(parsedSeat)) {
+    return res.status(400).json({ error: 'Invalid day or seat value.' });
+  }
+
+  const isTaken = db.seats.some(item => item.day === parsedDay && item.seat === parsedSeat);
+  if (isTaken) {
+    return res.status(409).json({ message: 'The slot is already taken...' });
+  }  
+
   const id = uuidv4();
-  const newSeat = { id, day, seat, client, email };
+  const newSeat = { id, day: parsedDay, seat: parsedSeat, client, email };
   db.seats.push(newSeat);
   res.status(201).json({ message: 'OK' });
 });
