@@ -9,7 +9,6 @@ import SeatChooser from './../SeatChooser/SeatChooser';
 const OrderTicketForm = () => {
   const dispatch = useDispatch();
   const requests = useSelector(getRequests);
-  console.log(requests);
 
   const [order, setOrder] = useState({
     client: '',
@@ -21,7 +20,6 @@ const OrderTicketForm = () => {
   const [isAgreed, setIsAgreed] = useState(false); // Dodane stan dla zgody
 
   useEffect(() => {
-    console.log(isAgreed);
     if (order.client && order.email && order.day && isAgreed) {
       dispatch(loadSeatsRequest());
     }
