@@ -19,11 +19,11 @@ const OrderTicketForm = () => {
   const [isError, setIsError] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false); // Dodane stan dla zgody
 
-  useEffect(() => {
-    if (order.client && order.email && order.day && isAgreed) {
-      dispatch(loadSeatsRequest());
-    }
-  }, [order, dispatch, isAgreed]);
+  // useEffect(() => {
+  //   if (order.client && order.email && order.day && isAgreed) {
+  //     dispatch(loadSeatsRequest());
+  //   }
+  // }, [order, dispatch, isAgreed]);
 
   const updateSeat = (e, seatId) => {
     e.preventDefault();

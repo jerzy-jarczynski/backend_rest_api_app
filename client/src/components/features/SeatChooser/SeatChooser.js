@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Progress, Alert } from 'reactstrap';
-import { getSeats, loadSeatsRequest, getRequests } from '../../../redux/seatsRedux';
+import { getSeats, loadSeats, loadSeatsRequest, getRequests } from '../../../redux/seatsRedux';
 import io from 'socket.io-client';
 import './SeatChooser.scss';
 
@@ -13,21 +13,23 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   const seats = useSelector(getSeats);
   const requests = useSelector(getRequests);
   
-  useEffect(() => {
+  // useEffect(() => {
 
-    dispatch(loadSeatsRequest());
+  //   dispatch(loadSeatsRequest());
 
-    let interval;
+  //   let interval;
 
-    interval = setInterval(() => {
-      dispatch(loadSeatsRequest());
-    }, 120000);
+  //   interval = setInterval(() => {
+  //     dispatch(loadSeatsRequest());
+  //   }, 120000);
 
-    return () => clearInterval(interval)
+  //   return () => clearInterval(interval)
 
-  }, [dispatch, chosenSeat]);
+  // }, [dispatch, chosenSeat]);
   
   useEffect(() => {
+    dispatch(loadSeatsRequest());
+
     if (!socket) {
       const socketInstance = io(
         process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8000/'
@@ -35,6 +37,8 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
       setSocket(socketInstance);
 
       console.log('Connecting to the server via socket...');
+
+      socketInstance.on('seatsUpdated', (seats) => dispatch(loadSeats(seats)));
     }
 
     return () => {
