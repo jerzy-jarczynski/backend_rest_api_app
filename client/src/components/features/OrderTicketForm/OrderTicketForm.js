@@ -1,7 +1,7 @@
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, Progress } from 'reactstrap';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSeatRequest, getRequests, loadSeatsRequest } from '../../../redux/seatsRedux';
+import { addSeatRequest, getRequests } from '../../../redux/seatsRedux';
 
 import './OrderTicketForm.scss';
 import SeatChooser from './../SeatChooser/SeatChooser';
@@ -17,13 +17,7 @@ const OrderTicketForm = () => {
     seat: ''
   });
   const [isError, setIsError] = useState(false);
-  const [isAgreed, setIsAgreed] = useState(false); // Dodane stan dla zgody
-
-  // useEffect(() => {
-  //   if (order.client && order.email && order.day && isAgreed) {
-  //     dispatch(loadSeatsRequest());
-  //   }
-  // }, [order, dispatch, isAgreed]);
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const updateSeat = (e, seatId) => {
     e.preventDefault();
@@ -37,8 +31,14 @@ const OrderTicketForm = () => {
 
   const updateNumberField = ({ target }) => {
     const { value, name } = target;
-    setOrder({ ...order, [name]: parseInt(value) });
-  }
+    const parsedValue = parseInt(value);
+  
+    if (!Number.isNaN(parsedValue)) {
+      setOrder({ ...order, [name]: parsedValue });
+    } else {
+      setOrder({ ...order, [name]: '' }); // Reset the field if the value is not a valid number
+    }
+  };
 
   const submitForm = async (e) => {
     e.preventDefault();
