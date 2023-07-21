@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-// const db = require('./db');
 const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+
+const uri = 'mongodb+srv://anderfor:anderfor123456%2A@kodilla.vpc6m3e.mongodb.net/NewWaveDB?retryWrites=true&w=majority';
 
 // import routes
 const testimonialRoutes = require('./routes/testimonials.routes');
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '/client/build')));
 
 // conncects our backend code with the database
-mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
