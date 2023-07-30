@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const workshopSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  concertId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Concert' },
+  concertId: { type: String, required: true },
 });
 
 module.exports = mongoose.model('Workshop', workshopSchema);

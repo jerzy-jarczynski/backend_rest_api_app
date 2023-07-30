@@ -79,3 +79,47 @@ exports.removeById = async (req, res) => {
     res.status(500).json({ message: err });
   }
 };
+
+//
+
+exports.getByPerformer = async (req, res) => {
+  try {
+    const concerts = await Concert.find({ performer: req.params.performer });
+    console.log(concerts);
+    res.json(concerts);
+  }
+  catch(err) {
+    console.log(err);
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.getByGenre = async (req, res) => {
+  try {
+    const concerts = await Concert.find({ genre: req.params.genre });
+    res.json(concerts);
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.getByPrice = async (req, res) => {
+  try {
+    const concerts = await Concert.find({ price: { $gte: Number(req.params.price_min), $lte: Number(req.params.price_max) } });
+    res.json(concerts);
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.getByDay = async (req, res) => {
+  try {
+    const concerts = await Concert.find({ day: Number(req.params.day) });
+    res.json(concerts);
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
