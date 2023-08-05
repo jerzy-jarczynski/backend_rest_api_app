@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 const uri = `mongodb+srv://anderfor:${process.env.DB_PASS}@kodilla.vpc6m3e.mongodb.net/NewWaveDB?retryWrites=true&w=majority`;
 
@@ -33,6 +34,7 @@ app.use(cors({
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(helmet());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
