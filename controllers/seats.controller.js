@@ -1,4 +1,5 @@
 const Seat = require('../models/seat.model');
+const sanitize = require('mongo-sanitize');
 
 exports.getAll = async (req, res) => {
   try {
@@ -34,10 +35,16 @@ exports.getById = async (req, res) => {
 };
 
 // mod: add filtering for preventing HTML injections to name/email
+// mod: add mongo-sanitaze for inputs
 exports.addNew = async (req, res) => {
   
   try {
-    const { day, seat, client, email } = req.body;
+    // sanitize the inputs
+    const day = sanitize(req.body.day);
+    const seat = sanitize(req.body.seat);
+    const client = sanitize(req.body.client);
+    const email = sanitize(req.body.email);
+
     // Regular Expressions for name and email validation
     const clientRegex = /^[a-zA-Z '-]+$/;
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -81,6 +88,7 @@ exports.addNew = async (req, res) => {
   }
   
 };
+
 
 
 exports.modifyById = async (req, res) => {
