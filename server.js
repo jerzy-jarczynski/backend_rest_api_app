@@ -13,7 +13,24 @@ const seatsRoutes = require('./routes/seats.routes');
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:8000',
+  'https://backendrestapiapp.jerzy-jarczynski.repl.co/'
+];
+
+app.use(cors({
+  origin: function(origin, callback){
+
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = 'The CORS policy for this site does not allow external access...';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -28,17 +45,30 @@ if (NODE_ENV === "production") dbUri = uri;
 else if (NODE_ENV === "test") dbUri = "mongodb://localhost:27017/NewWaveDBTest";
 else dbUri = "mongodb://localhost:27017/NewWaveDB";
 
-mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection;
 
-db.once('open', () => {
-  if (NODE_ENV !== "test") console.log("Connected to the database");
-});
-db.on('error', err => console.log('Error ' + err));
+try {
+  mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
+  const db = mongoose.connection;
 
-const server = app.listen(process.env.PORT || 8000, () => {
-  console.log('Server is running on port: 8000');
-});
+  db.once('open', () => {
+    if (NODE_ENV !== "test") console.log("Connected to the database");
+  });
+  db.on('error', err => console.log('Error ' + err));
+} catch (err) {
+  if(process.env.debug === true) console.log(err);
+  else console.log('Couldn\'t connect to db...');
+}
+
+let server;
+
+try {
+  server = app.listen(process.env.PORT || 8000, () => {
+    console.log('Server is running on port: 8000');
+  });
+} catch (err) {
+  if(process.env.debug === true) console.log(err);
+  else console.log('Couldn\'t start the server...');
+}
 
 const io = socket(server);
 
