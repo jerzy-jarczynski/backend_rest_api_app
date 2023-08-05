@@ -33,14 +33,28 @@ exports.getById = async (req, res) => {
   }
 };
 
+// mod: add filtering for preventing HTML injections to name/email
 exports.addNew = async (req, res) => {
   
   try {
     const { day, seat, client, email } = req.body;
+    // Regular Expressions for name and email validation
+    const clientRegex = /^[a-zA-Z '-]+$/;
+    const emailRegex = /^\S+@\S+\.\S+$/;
+
     // validation
     if (!day || !seat || !client || !email) {
       return res.status(400).json({ error: 'One or more mandatory fields omitted.' });
     }
+
+    // Validate client and email
+    if (!clientRegex.test(client)) {
+      return res.status(400).json({ error: 'Invalid characters in client name.' });
+    }
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format.' });
+    }
+
     // parse int
     const parsedDay = parseInt(day);
     const parsedSeat = parseInt(seat);
@@ -61,12 +75,13 @@ exports.addNew = async (req, res) => {
     // websocket
     req.io.emit('seatsUpdated', allSeats);
     // response
-    res.json({ message: 'OK asdasd' });
+    res.json({ message: 'OK' });
   } catch(err) {
     res.status(500).json({ message: err });
   }
   
 };
+
 
 exports.modifyById = async (req, res) => {
   const { day, seat, client, email } = req.body;
