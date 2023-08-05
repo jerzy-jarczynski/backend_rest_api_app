@@ -4,7 +4,7 @@ const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
 
-const uri = 'mongodb+srv://anderfor:anderfor123456%2A@kodilla.vpc6m3e.mongodb.net/NewWaveDB?retryWrites=true&w=majority';
+const uri = `mongodb+srv://anderfor:${process.env.DB_PASS}@kodilla.vpc6m3e.mongodb.net/NewWaveDB?retryWrites=true&w=majority`;
 
 // import routes
 const testimonialRoutes = require('./routes/testimonials.routes');

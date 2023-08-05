@@ -33,9 +33,15 @@ exports.getById = async (req, res) => {
   }
 };
 
+// mod: add validation
 exports.addNew = async (req, res) => {
   try {
     const { author, text } = req.body;
+    
+    if (!author || !text) {
+      return res.status(400).json({ message: 'Please provide both author and text.' });
+    }
+
     const newTestimonial = new Testimonial({ author: author, text: text });
     await newTestimonial.save();
     res.json({ message: 'OK' });

@@ -34,9 +34,24 @@ exports.getById = async (req, res) => {
   }
 };
 
+// mod: add validation
 exports.addNew = async (req, res) => {
   try {
     const { performer, genre, price, day, image } = req.body;
+
+    // Perform simple validations
+    if (!performer || !genre || !image || day === undefined || price === undefined) {
+      return res.status(400).json({ message: 'Please provide all required fields: performer, genre, price, day, image.' });
+    }
+
+    if (typeof price !== 'number') {
+      return res.status(400).json({ message: 'Price must be a number.' });
+    }
+
+    if (!Number.isInteger(day)) {
+      return res.status(400).json({ message: 'Day must be an integer.' });
+    }
+
     const newConcert = new Concert({ performer: performer, genre: genre, price: price, day: day, image: image });
     await newConcert.save();
     res.json({ message: 'OK' });
